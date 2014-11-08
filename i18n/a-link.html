@@ -5,7 +5,7 @@
 <polymer-element name="a-link" attributes="href">
   <template>
     <i18n-translations id="i18n"></i18n-translations>
-    <core-signals on-core-signal-languagechanged="{{languageChanged}}"></core-signals>
+    <core-signals on-core-signal-languagechanged="{{languageUpdated}}"></core-signals>
     <a href="#/{{language}}{{href}}">
       <content></content>
     </a>
@@ -17,8 +17,8 @@
         this.language = this.$.i18n.language;
       },
       // when receiving core-signal-languagechanged events (sent by <i18n-translations>), update the language
-      languageChanged: function (event, detail, sender) {
-        this.language = detail;
+      languageUpdated: function (_, language) {
+        this.language = language;
       }
     });
   </script>

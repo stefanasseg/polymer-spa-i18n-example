@@ -6,7 +6,7 @@
     <app-router>
       <app-route path="/*/i18ntest1" import="i18n-test1.html"></app-route>
       <app-route path="/*/i18ntest2" import="i18n-test2.html"></app-route>
-      <app-route path="*" redirect="/{{defaultLanguage}}/i18ntest1"></app-route>
+      <app-route path="*" redirect="/{{$.i18n.language || defaultLanguage}}/i18ntest1"></app-route>
     </app-router>
   </template>
   <script>

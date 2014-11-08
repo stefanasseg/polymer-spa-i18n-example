@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/flatiron-director/flatiron-director.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../bower_components/core-signals/core-signals.html">
 
 <polymer-element name="i18n-translations" attributes="i18nBasePath i18nFileNamePrefix">
   <template>
@@ -8,12 +9,14 @@
     <core-ajax url="{{i18nBasePath}}/{{i18nFileNamePrefix}}-{{fetchLanguage}}.json"
                handleAs="json" response="{{labels}}" id="loader">
     </core-ajax>
+    <core-signals on-core-signal-labelsupdated="{{labelsUpdated}}"></core-signals>
   </template>
   <script>
     (function () {
       // static variables, available in all <i18n-translations> instances
-      var _language;
       var _labels;
+      var _language;
+      var _fetchLanguage;
 
       Polymer({
         // default values
@@ -31,28 +34,41 @@
         routeChanged: function (_, route) {
           // extract language from route
           var language = route.substr(0, route.indexOf("/"));
-          if (language === "") return;
+          if (language == "") return;
           // if labels have not been fetched yet or language has changed
-          if (_labels === undefined || _language != language) {
+          if (this.labels == undefined || _fetchLanguage != language) {
             // update the language which updates the core-ajax element's URL
             this.fetchLanguage = language;
+            _fetchLanguage = language;
+            // remember that label have been fetched by this instance and therefor they do not have to be process when receiving the signal
+            this.waitingForLabels = false;
+            console.log("fetching labels because " + (this.labels == undefined ? "labels == undefined" : "this.fetchLanguage != language") + ", NOT waiting for labels");
             // make the core-ajax element load the translation-<language>.json file
             this.$.loader.go();
+          } else {
+            console.log("NOT fetching labels, waiting for labels");
+            this.waitingForLabels = true;
           }
         },
-        // listen for the labels retrieved by the core-ajax element
+        // listen for the labels retrieved by this instance's core-ajax element
         labelsChanged: function (_, labels) {
-          // update the language so it gets populated to observers and via core-signals
-          this.language = this.fetchLanguage;
-          // update the static _labels variable so the retrieved labels are available in all <i18n-translations> instances
-          _labels = labels;
+          if (!this.waitingForLabels) {
+            console.log("labelsChanged: labels fetched by this instance (" + this + ") have been received");
+            // update the static variables so they are available in all instances
+            _labels = labels;
+            this.language = this.fetchLanguage;
+            _language = this.fetchLanguage;
+            // fire a core-signals to notify listeners about the new labels and language
+            this.fire('core-signal', {name: "labelsupdated", data: labels});
+            this.fire('core-signal', {name: "languagechanged", data: _fetchLanguage});
+          }
         },
-        // listen for language changes
-        languageChanged: function (_, language) {
-          // update the static _language variable
-          _language = language;
-          // fire a core-signal to notify anyone listening for
-          this.fire('core-signal', {name: "languagechanged", data: language});
+        // listen for labels retrieved by another instance
+        labelsUpdated: function (_, labels) {
+          if (this.waitingForLabels) {
+            console.log("labelsUpdated: labels have been received via a core-signal from another instance");
+            this.labels = labels;
+          }
         }
       });
     })();
