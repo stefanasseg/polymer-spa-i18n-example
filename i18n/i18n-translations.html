@@ -2,10 +2,11 @@
 <link rel="import" href="../bower_components/flatiron-director/flatiron-director.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 
-<polymer-element name="i18n-translations">
+<polymer-element name="i18n-translations" attributes="i18nBasePath i18nFileNamePrefix">
   <template>
     <flatiron-director route="{{route}}"></flatiron-director>
-    <core-ajax url="i18n/translations-{{fetchLanguage}}.json" handleAs="json" response="{{labels}}" id="loader">
+    <core-ajax url="{{i18nBasePath}}/{{i18nFileNamePrefix}}-{{fetchLanguage}}.json"
+               handleAs="json" response="{{labels}}" id="loader">
     </core-ajax>
   </template>
   <script>
@@ -15,6 +16,9 @@
       var _labels;
 
       Polymer({
+        // default values
+        i18nBasePath: "translations",
+        i18nFileNamePrefix: "translations",
         created: function () {
           // make static variables available in this instance and make them data-bound
           this.labels = _labels;
