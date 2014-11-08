@@ -1,0 +1,16 @@
+{
+  "name": "polymer-spa-i18n-example",
+  "description": "Polymer Single Page Application i18n example",
+  "version": "0.1",
+  "authors": [
+    { "name": "Stefan Asseg", "email": "stefanasseg@gmail.com" }
+  ],
+  "main": "index.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.4.2",
+    "core-elements": "Polymer/core-elements#~0.4.2",
+    "app-router": "~2.0.2",
+    "flatiron-director": "PolymerLabs/flatiron-director#~0.4.0"
+  },
+  "private": false
+}

@@ -1,0 +1,25 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-signals/core-signals.html">
+<link rel="import" href="i18n-translations.html">
+
+<polymer-element name="a-link" attributes="href">
+  <template>
+    <i18n-translations id="i18n"></i18n-translations>
+    <core-signals on-core-signal-languagechanged="{{languageChanged}}"></core-signals>
+    <a href="#/{{language}}/{{href}}">
+      <content></content>
+    </a>
+  </template>
+  <script>
+    Polymer({
+      // set language to i18n's current language
+      ready: function () {
+        this.language = this.$.i18n.language;
+      },
+      // when receiving core-signal-languagechanged events (sent by <i18n-translations>), update the language
+      languageChanged: function (event, detail, sender) {
+        this.language = detail;
+      }
+    });
+  </script>
+</polymer-element>

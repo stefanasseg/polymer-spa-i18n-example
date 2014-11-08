@@ -1,0 +1,14 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="i18n/i18n-translations.html">
+<link rel="import" href="i18n/a-link.html">
+
+<polymer-element name="i18n-test2" extends="i18n-translations" noscript>
+  <template>
+    <i18n-translations id="i18n"></i18n-translations>
+    <h1>I18n test page 2</h1>
+    <a-link href="i18ntest1">i18ntest1</a-link>
+    <br/>
+    <span style="border: 1px solid red;">{{$.i18n.labels.label1}}</span>
+    <span style="border: 1px solid blue;">{{$.i18n.labels.label2}}</span>
+  </template>
+</polymer-element>

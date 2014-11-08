@@ -1,0 +1,30 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/flatiron-director/flatiron-director.html">
+
+<polymer-element name="language-switcher" attributes="language">
+  <template>
+    <flatiron-director route="{{route}}"></flatiron-director>
+    <a href="#/{{language}}{{path}}">
+      <content></content>
+    </a>
+  </template>
+  <script>
+    (function () {
+      // static variable, available in all <language-chooser> instances
+      var _path;
+
+      Polymer({
+        created: function () {
+          // make static variable available in this instance and make it data-bound
+          this.path = _path;
+        },
+        // listen for route changes
+        routeChanged: function (_, route) {
+          // extract path without language from route
+          this.path = route.substr(route.indexOf("/"));
+          _path = this.path;
+        }
+      });
+    })();
+  </script>
+</polymer-element>

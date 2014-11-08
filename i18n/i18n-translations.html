@@ -1,0 +1,54 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/flatiron-director/flatiron-director.html">
+<link rel="import" href="../bower_components/core-ajax/core-ajax.html">
+
+<polymer-element name="i18n-translations">
+  <template>
+    <flatiron-director route="{{route}}"></flatiron-director>
+    <core-ajax url="i18n/translations-{{fetchLanguage}}.json" handleAs="json" response="{{labels}}" id="loader">
+    </core-ajax>
+  </template>
+  <script>
+    (function () {
+      // static variables, available in all <i18n-translations> instances
+      var _language;
+      var _labels;
+
+      Polymer({
+        created: function () {
+          // make static variables available in this instance and make them data-bound
+          this.labels = _labels;
+          this.language = _language;
+        },
+        published: {
+          language: _language
+        },
+        // listen for route changes
+        routeChanged: function (_, route) {
+          // extract language from route
+          var language = route.substr(0, route.indexOf("/"));
+          if (_labels === undefined || _language != language) {
+            // update the language which updates the core-ajax element's URL
+            this.fetchLanguage = language;
+            // make the core-ajax element load the translation-<language>.json file
+            this.$.loader.go();
+          }
+        },
+        // listen for the labels retrieved by the core-ajax element
+        labelsChanged: function (_, labels) {
+          // update the language so it gets populated to observers and via core-signals
+          this.language = this.fetchLanguage;
+          // update the static _labels variable so the retrieved labels are available in all <i18n-translations> instances
+          _labels = labels;
+        },
+        // listen for language changes
+        languageChanged: function (_, language) {
+          // update the static _language variable
+          _language = language;
+          // fire a core-signal to notify anyone listening for
+          this.fire('core-signal', {name: "languagechanged", data: language});
+        }
+      });
+    })();
+  </script>
+</polymer-element>
