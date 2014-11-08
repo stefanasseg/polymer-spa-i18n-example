@@ -6,7 +6,7 @@
   <template>
     <i18n-translations id="i18n"></i18n-translations>
     <core-signals on-core-signal-languagechanged="{{languageChanged}}"></core-signals>
-    <a href="#/{{language}}/{{href}}">
+    <a href="#/{{language}}{{href}}">
       <content></content>
     </a>
   </template>

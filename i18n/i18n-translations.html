@@ -25,12 +25,14 @@
           this.language = _language;
         },
         published: {
-          language: _language
+          language: undefined
         },
         // listen for route changes
         routeChanged: function (_, route) {
           // extract language from route
           var language = route.substr(0, route.indexOf("/"));
+          if (language === "") return;
+          // if labels have not been fetched yet or language has changed
           if (_labels === undefined || _language != language) {
             // update the language which updates the core-ajax element's URL
             this.fetchLanguage = language;
