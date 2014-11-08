@@ -1,12 +1,12 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/app-router/app-router.html">
 
-<polymer-element name="app-routing" extends="app-route" attributes="defaultPath">
+<polymer-element name="app-routing" extends="app-route">
   <template>
     <app-router>
       <app-route path="/*/i18ntest1" import="i18n-test1.html"></app-route>
       <app-route path="/*/i18ntest2" import="i18n-test2.html"></app-route>
-      <app-route path="*" redirect="/{{defaultLanguage}}/"></app-route>
+      <app-route path="*" redirect="/{{defaultLanguage}}/i18ntest1"></app-route>
     </app-router>
   </template>
   <script>
